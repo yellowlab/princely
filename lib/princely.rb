@@ -24,6 +24,19 @@ class Princely
   cattr_writer :log_file
   attr_accessor :exe_path, :style_sheets, :log_file, :logger
 
+  def self.prince_executable
+    @@prince_executable ||= begin
+      path = `which prince`.chomp
+      raise "Cannot find prince command-line app in $PATH" if @exe_path.length == 0
+      path
+    end
+  end
+
+  def self.prince_executable=(path)
+    raise "Configured prince executable '#{path}' is not valid. Check file exists and is executable by user." if File.executable?(path)
+    @@prince_executable = path
+  end
+
   def self.log_file
     @@log_file ||= "#{Rails.root}/log/prince.log"
   end
@@ -32,8 +45,7 @@ class Princely
   #
   def initialize
     # Finds where the application lives, so we can call it.
-    @exe_path = `which prince`.chomp
-    raise "Cannot find prince command-line app in $PATH" if @exe_path.length == 0
+    @exe_path = self.class.prince_executable
     @style_sheets = ''
     @log_file = self.class.log_file
     @logger = Rails.logger

@@ -21,17 +21,22 @@ require 'princely/rails'
 class Princely
   VERSION = "1.0.0" unless const_defined?("VERSION")
   
+  cattr_writer :log_file
   attr_accessor :exe_path, :style_sheets, :log_file, :logger
+
+  def self.log_file
+    @@log_file ||= "#{Rails.root}/log/prince.log"
+  end
 
   # Initialize method
   #
-  def initialize()
+  def initialize
     # Finds where the application lives, so we can call it.
     @exe_path = `which prince`.chomp
     raise "Cannot find prince command-line app in $PATH" if @exe_path.length == 0
-  	@style_sheets = ''
-  	@log_file = "#{Rails.root}/log/prince.log"
-  	@logger = Rails.logger
+    @style_sheets = ''
+    @log_file = self.class.log_file
+    @logger = Rails.logger
   end
   
   # Sets stylesheets...

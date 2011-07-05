@@ -27,7 +27,7 @@ class Princely
   def self.prince_executable
     @@prince_executable ||= begin
       path = `which prince`.chomp
-      raise "Cannot find prince command-line app in $PATH" if @exe_path.length == 0
+      raise "Cannot find prince command-line app in $PATH" if path.length == 0
       path
     end
   end

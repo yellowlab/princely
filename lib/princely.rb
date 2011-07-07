@@ -45,7 +45,7 @@ class Princely
   #
   def initialize
     # Finds where the application lives, so we can call it.
-    @exe_path = self.class.prince_executable
+    @exe_path = self.class.prince_executable.dup
     @style_sheets = ''
     @log_file = self.class.log_file
     @logger = Rails.logger
